@@ -93,9 +93,48 @@ const productName = async (req, res) => {
 //         res.status(500).json({ message: error.message });
 //     }
 // };
+// const createProduct = async (req, res) => {
+//     try {
+//         const { name, price, brand, tipoId,sise,color, stock, description } = req.body;
+
+//         // Verifica si el producto ya existe
+//         const existingProduct = await Productos.findOne({ name });
+//         if (existingProduct) {
+//             return res.status(400).send("El producto ya existe");
+//         }
+
+//         // Verifica si el tipo de producto existe
+//         const tipo = await TipoProductos.findById(tipoId);
+//         if (!tipo) {
+//             return res.status(400).send("El tipo de producto no existe");
+//         }
+
+//         // Crea un arreglo para almacenar las imágenes
+//         const images = req.files.map(file => file.buffer); // Accede a los buffers de las imágenes
+
+//         // Crea el producto asociándolo al tipo correspondiente
+//         const product = new Productos({
+//             name,
+//             price,
+//             brand,
+//             description,
+//             stock,
+//             sise,
+//             color,
+//             image: images, // Almacena las imágenes como buffers
+//             tipo: tipoId,
+//         });
+
+//         await product.save();
+//         res.status(200).send(product);
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ message: error.message });
+//     }
+// };
 const createProduct = async (req, res) => {
     try {
-        const { name, price, brand, tipoId, stock, description } = req.body;
+        const { name, price, brand, tipoId, sise, color, stock, description } = req.body;
 
         // Verifica si el producto ya existe
         const existingProduct = await Productos.findOne({ name });
@@ -110,7 +149,11 @@ const createProduct = async (req, res) => {
         }
 
         // Crea un arreglo para almacenar las imágenes
-        const images = req.files.map(file => file.buffer); // Accede a los buffers de las imágenes
+        const images = req.files.map(file => file.buffer);
+
+        // Divide las cadenas de sise y color en arreglos
+        const sizesArray = sise.split(',').map(size => size.trim()); // Separa por comas y elimina espacios
+        const colorsArray = color.split(',').map(col => col.trim()); // Separa por comas y elimina espacios
 
         // Crea el producto asociándolo al tipo correspondiente
         const product = new Productos({
@@ -119,6 +162,8 @@ const createProduct = async (req, res) => {
             brand,
             description,
             stock,
+            sise: sizesArray, // Almacena las tallas como un arreglo
+            color: colorsArray, // Almacena los colores como un arreglo
             image: images, // Almacena las imágenes como buffers
             tipo: tipoId,
         });
@@ -130,6 +175,7 @@ const createProduct = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 /**
  * Actulizar un  producto.

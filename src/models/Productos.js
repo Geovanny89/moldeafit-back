@@ -7,7 +7,7 @@ const productosSchema = mongoose.Schema({
     },
     brand: {
         type: String,
-        required: true // Corrección aquí
+       
     },
     price: {
         type: String,
@@ -27,7 +27,7 @@ const productosSchema = mongoose.Schema({
         type: String
     },
     image: [{
-        type: Buffer 
+        type: String // Cambiado a String para almacenar URLs
     }],
     tipo: { 
         type: Schema.Types.ObjectId, 

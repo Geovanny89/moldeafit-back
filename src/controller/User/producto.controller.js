@@ -28,7 +28,34 @@ const productxName = async(req,res)=>{
         res.status(500).json({ message: error.message })
     }
 }
+const productId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log("ID recibido:", id); // Verificar el ID recibido
+
+        if (!id) {
+            res.status(404).send("No existe producto con ese ID");
+            return;
+        }
+
+        // Cambia a findOne
+        const product = await Productos.findOne({ _id: id });
+        console.log("Producto encontrado:", product); // Verificar el producto encontrado
+
+        if (!product) {
+            res.status(404).send("No existe producto con ese ID");
+            return;
+        }
+
+        res.status(200).send(product);
+    } catch (error) {
+        console.error("Error al buscar el producto:", error); // Mejor manejo del error
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports ={
     productoUser,
-    productxName
+    productxName,
+    productId
 }
